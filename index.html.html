@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CalmMind AI – Seu guia de bem-estar</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage: #7a9e7e;
+    --sage-light: #a8c5ac;
+    --sage-dark: #4f7253;
+    --cream: #f5f0e8;
+    --warm: #e8dfd0;
+    --sand: #c9b99a;
+    --charcoal: #2a2a2a;
+    --text-muted: #7a7065;
+    --lavender: #9b8bb4;
+    --peach: #d4956a;
+    --soft-white: #faf8f4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--charcoal);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* HEADER */
+  header {
+    width: 100%;
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(245,240,232,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,185,154,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .logo-icon {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, var(--sage), var(--lavender));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 2px 12px rgba(122,158,126,0.4);
+    flex-shrink: 0;
+  }
+
+  .logo-text h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    color: var(--sage-dark);
+    line-height: 1;
+  }
+
+  .logo-text span {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    font-weight: 300;
+  }
+
+  .header-badge {
+    margin-left: auto;
+    background: rgba(122,158,126,0.12);
+    border: 1px solid rgba(122,158,126,0.3);
+    color: var(--sage-dark);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+
+  /* MAIN LAYOUT */
+  main {
+    width: 100%;
+    max-width: 760px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0 16px;
+  }
+
+  /* WELCOME */
+  .welcome {
+    text-align: center;
+    padding: 40px 20px 28px;
+    animation: fadeSlide 0.7s ease;
+  }
+
+  .welcome-emoji {
+    font-size: 3rem;
+    margin-bottom: 12px;
+    display: block;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .welcome h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.9rem;
+    color: var(--sage-dark);
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .welcome p {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    font-weight: 300;
+    max-width: 400px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* MOOD PICKER */
+  .mood-section {
+    margin: 0 0 24px;
+    animation: fadeSlide 0.7s ease 0.2s both;
+  }
+
+  .mood-label {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .mood-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .mood-pill {
+    padding: 8px 16px;
+    border-radius: 30px;
+    border: 1.5px solid rgba(201,185,154,0.5);
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .mood-pill:hover {
+    border-color: var(--sage);
+    color: var(--sage-dark);
+    background: rgba(122,158,126,0.08);
+  }
+
+  .mood-pill.active {
+    background: var(--sage);
+    border-color: var(--sage);
+    color: white;
+  }
+
+  /* CHAT AREA */
+  .chat-area {
+    flex: 1;
+    min-height: 340px;
+    max-height: 420px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 4px 0 16px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--sand) transparent;
+  }
+
+  .chat-area::-webkit-scrollbar { width: 4px; }
+  .chat-area::-webkit-scrollbar-thumb { background: var(--sand); border-radius: 4px; }
+
+  /* MESSAGES */
+  .msg {
+    display: flex;
+    gap: 10px;
+    animation: fadeSlide 0.35s ease;
+  }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg.user { flex-direction: row-reverse; }
+
+  .msg-avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    margin-top: 2px;
+  }
+
+  .msg.bot .msg-avatar {
+    background: linear-gradient(135deg, var(--sage-light), var(--lavender));
+  }
+
+  .msg.user .msg-avatar {
+    background: var(--warm);
+    border: 1.5px solid var(--sand);
+  }
+
+  .msg-bubble {
+    max-width: 72%;
+    padding: 13px 17px;
+    border-radius: 18px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .msg.bot .msg-bubble {
+    background: var(--soft-white);
+    border: 1px solid rgba(201,185,154,0.35);
+    border-bottom-left-radius: 4px;
+    color: var(--charcoal);
+  }
+
+  .msg.user .msg-bubble {
+    background: var(--sage-dark);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+  }
+
+  /* TYPING INDICATOR */
+  .typing-bubble {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    padding: 14px 18px;
+  }
+
+  .typing-dot {
+    width: 7px; height: 7px;
+    background: var(--sage);
+    border-radius: 50%;
+    animation: typingBounce 1.2s ease infinite;
+  }
+
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes typingBounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+    40% { transform: translateY(-6px); opacity: 1; }
+  }
+
+  /* SUGGESTION CHIPS */
+  .suggestions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    animation: fadeSlide 0.4s ease;
+  }
+
+  .chip {
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(201,185,154,0.6);
+    background: rgba(245,240,232,0.7);
+    font-size: 0.79rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.18s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .chip:hover {
+    background: var(--sage);
+    border-color: var(--sage);
+    color: white;
+  }
+
+  /* INPUT */
+  .input-area {
+    background: var(--soft-white);
+    border: 1.5px solid rgba(201,185,154,0.5);
+    border-radius: 24px;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 12px 12px 12px 18px;
+    margin-bottom: 24px;
+    transition: border-color 0.2s;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.04);
+  }
+
+  .input-area:focus-within { border-color: var(--sage); }
+
+  textarea {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--charcoal);
+    resize: none;
+    outline: none;
+    max-height: 120px;
+    min-height: 24px;
+    line-height: 1.5;
+  }
+
+  textarea::placeholder { color: var(--sand); }
+
+  .send-btn {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: var(--sage-dark);
+    color: white;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    font-size: 16px;
+  }
+
+  .send-btn:hover { background: var(--sage); transform: scale(1.05); }
+  .send-btn:disabled { background: var(--sand); cursor: not-allowed; transform: none; }
+
+  /* DISCLAIMER */
+  .disclaimer {
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--sand);
+    padding-bottom: 20px;
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  /* OIL CARD */
+  .oil-card {
+    background: linear-gradient(135deg, rgba(155,139,180,0.08), rgba(122,158,126,0.08));
+    border: 1px solid rgba(155,139,180,0.25);
+    border-radius: 14px;
+    padding: 13px 16px;
+    margin-top: 10px;
+    font-size: 0.83rem;
+  }
+
+  .oil-card-title {
+    font-weight: 500;
+    color: var(--lavender);
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+  }
+
+  .oil-card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: var(--text-muted);
+  }
+
+  .oil-card li::before { content: "🌿 "; }
+
+  /* ALERT CARD */
+  .alert-card {
+    background: rgba(212,149,106,0.1);
+    border: 1px solid rgba(212,149,106,0.3);
+    border-radius: 14px;
+    padding: 13px 16px;
+    margin-top: 10px;
+    font-size: 0.83rem;
+    color: var(--peach);
+    font-weight: 500;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 500px) {
+    .welcome h2 { font-size: 1.5rem; }
+    .msg-bubble { max-width: 85%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-icon">🌿</div>
+  <div class="logo-text">
+    <h1>CalmMind AI</h1>
+    <span>Guia de bem-estar emocional</span>
+  </div>
+  <div class="header-badge">✦ Apoio, não diagnóstico</div>
+</header>
+
+<main>
+  <div class="welcome">
+    <span class="welcome-emoji">🌱</span>
+    <h2>Olá, como você está hoje?</h2>
+    <p>Estou aqui para conversar, ouvir e ajudar no que puder. Não sou médico — sou um espaço seguro para você.</p>
+  </div>
+
+  <div class="mood-section">
+    <div class="mood-label">Como você está se sentindo agora?</div>
+    <div class="mood-pills">
+      <button class="mood-pill" onclick="selectMood(this, 'ansioso')">😰 Ansioso</button>
+      <button class="mood-pill" onclick="selectMood(this, 'triste')">😔 Triste</button>
+      <button class="mood-pill" onclick="selectMood(this, 'estressado')">😤 Estressado</button>
+      <button class="mood-pill" onclick="selectMood(this, 'cansado')">😴 Cansado</button>
+      <button class="mood-pill" onclick="selectMood(this, 'ok')">😊 Tô ok</button>
+      <button class="mood-pill" onclick="selectMood(this, 'perdido')">🌫️ Perdido</button>
+    </div>
+  </div>
+
+  <div class="chat-area" id="chatArea"></div>
+
+  <div class="suggestions" id="suggestions">
+    <button class="chip" onclick="sendChip(this)">💭 Como lidar com ansiedade?</button>
+    <button class="chip" onclick="sendChip(this)">🌿 Óleos essenciais pra relaxar</button>
+    <button class="chip" onclick="sendChip(this)">😴 Não consigo dormir</button>
+    <button class="chip" onclick="sendChip(this)">🧠 Tenho me sentido muito triste</button>
+  </div>
+
+  <div class="input-area">
+    <textarea id="userInput" placeholder="Escreva como você está se sentindo..." rows="1" 
+      oninput="autoResize(this)" onkeydown="handleKey(event)"></textarea>
+    <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Enviar">➤</button>
+  </div>
+
+  <div class="disclaimer">
+    CalmMind AI não substitui psicólogos, psiquiatras ou médicos.<br>
+    Em situações de crise, ligue para o CVV: <strong>188</strong> (24h, gratuito).
+  </div>
+</main>
+
+<script>
+const SYSTEM_PROMPT = `Você é o CalmMind AI, um assistente de bem-estar emocional gentil, empático e acolhedor.
+
+PERSONALIDADE:
+- Tom caloroso, humano e natural. Nunca robótico.
+- Fala em português brasileiro informal, como um amigo que se preocupa.
+- Usa linguagem simples, sem jargões médicos.
+- Faz UMA pergunta por vez, com gentileza.
+- Usa emojis com moderação para deixar a conversa mais humana 🌿
+
+REGRAS ABSOLUTAS:
+1. JAMAIS faça diagnósticos ou prescreva medicamentos.
+2. Sempre deixe claro que não substitui profissionais.
+3. Em sinais de sofrimento intenso (auto-lesão, suicídio, crise), responda com muito cuidado, acolha com empatia e indique o CVV (188) e busca por ajuda profissional.
+4. Nunca minimize o sofrimento do usuário.
+5. Não insista em recomendações de óleos essenciais — sugira apenas quando fizer sentido ou quando solicitado.
+
+AROMATERAPIA (só quando relevante):
+- Lavanda → ansiedade, sono, relaxamento
+- Bergamota → estresse, humor deprimido
+- Camomila → nervosismo, irritabilidade
+- Ylang ylang → tensão, ansiedade
+- Hortelã-pimenta → foco, fadiga mental
+- Explicar formas de uso: difusor, inalação direta, diluído em óleo carreador.
+- Sempre alertar: não ingerir, testar antes se tiver alergias, não usar puro na pele.
+
+FORMATO das respostas:
+- Respostas curtas a médias. Nunca longas demais.
+- Quando sugerir óleos, termine a resposta com um bloco assim (exatamente):
+  [OIL_CARD]
+  Título: (nome do óleo ou grupo)
+  Benefícios: (lista curta)
+  Uso: (como usar)
+  Cuidado: (alerta básico)
+  [/OIL_CARD]
+- Quando identificar sinais de crise ou sofrimento grave, termine com:
+  [ALERT_CARD]Mensagem de apoio + indicação do CVV 188[/ALERT_CARD]
+- Pode usar **negrito** com ** ** para destacar pontos importantes, mas com moderação.
+- Pode usar listas com - quando fizer sentido organizar informações.
+- Quando usar a ferramenta de busca web, integre as informações encontradas de forma natural na conversa, citando a fonte de forma casual ("vi em um estudo recente...", "segundo a OMS...").`;
+
+let conversationHistory = [];
+let currentMood = null;
+let isLoading = false;
+
+function parseMarkdown(text) {
+  return text
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>[\s\S]+?<\/li>(\n|$))+/g, m => `<ul>${m}</ul>`)
+    .replace(/\n/g, '<br>');
+}
+
+function selectMood(btn, mood) {
+  document.querySelectorAll('.mood-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  currentMood = mood;
+  
+  const moodMessages = {
+    ansioso: 'Estou me sentindo muito ansioso hoje.',
+    triste: 'Estou me sentindo triste.',
+    estressado: 'Estou muito estressado.',
+    cansado: 'Estou exausto, física e mentalmente.',
+    ok: 'Estou bem, mas quero conversar um pouco.',
+    perdido: 'Estou me sentindo perdido, sem direção.'
+  };
+
+  if (moodMessages[mood]) {
+    document.getElementById('userInput').value = moodMessages[mood];
+    autoResize(document.getElementById('userInput'));
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function sendChip(chip) {
+  document.getElementById('userInput').value = chip.textContent.replace(/^[^\w]+/, '').trim();
+  sendMessage();
+}
+
+function addMessage(role, content) {
+  const area = document.getElementById('chatArea');
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+
+  const avatar = document.createElement('div');
+  avatar.className = 'msg-avatar';
+  avatar.textContent = role === 'bot' ? '🌿' : '🫂';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+
+  // Parse special cards
+  let cleanContent = content;
+  let oilCard = null;
+  let alertCard = null;
+
+  const oilMatch = content.match(/\[OIL_CARD\]([\s\S]*?)\[\/OIL_CARD\]/);
+  if (oilMatch) {
+    cleanContent = content.replace(/\[OIL_CARD\][\s\S]*?\[\/OIL_CARD\]/, '').trim();
+    const oilText = oilMatch[1];
+    const lines = oilText.trim().split('\n').map(l => l.trim()).filter(Boolean);
+    const oilData = {};
+    lines.forEach(l => {
+      const [k, ...v] = l.split(':');
+      if (k && v.length) oilData[k.trim()] = v.join(':').trim();
+    });
+    oilCard = oilData;
+  }
+
+  const alertMatch = content.match(/\[ALERT_CARD\]([\s\S]*?)\[\/ALERT_CARD\]/);
+  if (alertMatch) {
+    cleanContent = content.replace(/\[ALERT_CARD\][\s\S]*?\[\/ALERT_CARD\]/, '').trim();
+    alertCard = alertMatch[1].trim();
+  }
+
+  bubble.innerHTML = parseMarkdown(cleanContent);
+
+  if (oilCard) {
+    const card = document.createElement('div');
+    card.className = 'oil-card';
+    card.innerHTML = `<div class="oil-card-title">🌸 ${oilCard['Título'] || 'Aromaterapia'}</div>
+      <ul>
+        ${oilCard['Benefícios'] ? `<li><strong>Benefícios:</strong> ${oilCard['Benefícios']}</li>` : ''}
+        ${oilCard['Uso'] ? `<li><strong>Como usar:</strong> ${oilCard['Uso']}</li>` : ''}
+        ${oilCard['Cuidado'] ? `<li><strong>Atenção:</strong> ${oilCard['Cuidado']}</li>` : ''}
+      </ul>`;
+    bubble.appendChild(card);
+  }
+
+  if (alertCard) {
+    const card = document.createElement('div');
+    card.className = 'alert-card';
+    card.innerHTML = `💛 ${alertCard}`;
+    bubble.appendChild(card);
+  }
+
+  div.appendChild(avatar);
+  div.appendChild(bubble);
+  area.appendChild(div);
+  area.scrollTop = area.scrollHeight;
+}
+
+function showTyping() {
+  const area = document.getElementById('chatArea');
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  div.id = 'typingIndicator';
+
+  const avatar = document.createElement('div');
+  avatar.className = 'msg-avatar';
+  avatar.textContent = '🌿';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble typing-bubble';
+  bubble.innerHTML = `<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>`;
+
+  div.appendChild(avatar);
+  div.appendChild(bubble);
+  area.appendChild(div);
+  area.scrollTop = area.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById('typingIndicator');
+  if (t) t.remove();
+}
+
+async function sendMessage() {
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text || isLoading) return;
+
+  // Hide suggestions after first message
+  document.getElementById('suggestions').style.display = 'none';
+  document.querySelectorAll('.mood-pill').forEach(p => p.classList.remove('active'));
+
+  addMessage('user', text);
+  conversationHistory.push({ role: 'user', content: text });
+
+  input.value = '';
+  input.style.height = 'auto';
+  isLoading = true;
+  document.getElementById('sendBtn').disabled = true;
+  showTyping();
+
+  try {
+    const GROQ_API_KEY = 'COLOQUE_SUA_CHAVE_AQUI';
+
+    const fetchPromise = fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system: SYSTEM_PROMPT,
+        messages: conversationHistory
+      })
+    });
+
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('timeout')), 60000)
+    );
+
+    const response = await Promise.race([fetchPromise, timeoutPromise]);
+
+    const data = await response.json();
+    const reply = data.choices?.[0]?.message?.content || 'Não consegui processar sua mensagem. Tente novamente 🌿';
+
+    conversationHistory.push({ role: 'assistant', content: reply });
+    removeTyping();
+    addMessage('bot', reply);
+
+  } catch (err) {
+    removeTyping();
+    console.error('Erro:', err);
+    if (err.message === 'timeout') {
+      addMessage('bot', 'Demorei mais que o esperado... Pode tentar de novo? Estou aqui 🌿');
+    } else {
+      addMessage('bot', `Erro: ${err.message} 🌿`);
+    }
+  }
+
+  isLoading = false;
+  document.getElementById('sendBtn').disabled = false;
+  input.focus();
+}
+
+// Initial greeting
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    const greetings = [
+      'Olá! Que bom ter você aqui 🌿 Estou aqui para ouvir. Como você tem se sentido ultimamente?',
+      'Oi! Este é um espaço seguro e sem julgamentos. Pode falar o que está sentindo. Por onde quer começar?',
+      'Olá! Me chamo CalmMind e estou aqui para conversar com você sobre como está se sentindo. O que está passando pela sua cabeça hoje?'
+    ];
+    const msg = greetings[Math.floor(Math.random() * greetings.length)];
+    addMessage('bot', msg);
+    conversationHistory.push({ role: 'assistant', content: msg });
+  }, 500);
+});
+</script>
+</body>
+</html>
