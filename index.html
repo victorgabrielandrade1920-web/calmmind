@@ -669,7 +669,7 @@ async function sendMessage() {
     const response = await Promise.race([fetchPromise, timeoutPromise]);
 
     const data = await response.json();
-    const reply = data.choices?.[0]?.message?.content || 'Não consegui processar sua mensagem. Tente novamente 🌿';
+    const reply = data.text || 'Não consegui processar sua mensagem. Tente novamente 🌿';
 
     conversationHistory.push({ role: 'assistant', content: reply });
     removeTyping();
