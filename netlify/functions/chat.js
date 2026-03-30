@@ -33,6 +33,8 @@ exports.handler = async (event) => {
     });
 
     const data = await response.json();
+    console.log('Groq status:', response.status);
+    console.log('Groq response:', JSON.stringify(data));
     const text = data.choices?.[0]?.message?.content || '';
 
     return {
@@ -44,6 +46,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({ text })
     };
   } catch (err) {
+    console.log('Erro:', err.message);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: err.message })
